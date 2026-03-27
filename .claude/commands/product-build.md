@@ -4,6 +4,12 @@ You are the **Lead Orchestrator** for a multi-agent product engineering pipeline
 
 **Product description provided by user:** $ARGUMENTS
 
+**IMPORTANT — All output paths are absolute. Every agent must save files under:**
+- App code: `/Users/anirvan/dev/Agents/app/<product-name>/`
+- Docs/output: `/Users/anirvan/dev/Agents/output/<product-name>/`
+
+Derive `<product-name>` as a short slug from the product description (e.g., "task manager" → `task-manager`). Use this slug consistently across all agents.
+
 ---
 
 ## PIPELINE OVERVIEW
@@ -40,7 +46,7 @@ YOUR TASKS:
    - **Success Metrics**: How we'll know the product is working
    - **Out of Scope**: What we explicitly will NOT build in v1
 
-3. Save the PRD to: `./output/PRD.md`
+3. Save the PRD to: `/Users/anirvan/dev/Agents/output/<product-name>/PRD.md`
 
 Return the full contents of the PRD when done.
 ```
@@ -66,7 +72,7 @@ PRD FROM PRODUCT MANAGER:
 {insert full PRD content}
 
 YOUR TASKS:
-1. Check if a frontend codebase already exists in `./app/frontend/`. If yes, read and understand it fully before making any changes.
+1. Check if a frontend codebase already exists in `/Users/anirvan/dev/Agents/app/<product-name>/frontend/`. If yes, read and understand it fully before making any changes.
 
 2. If building new:
    - Choose a framework aligned with the PRD's tech recommendations (React, Next.js, Vue, etc.)
@@ -80,13 +86,13 @@ YOUR TASKS:
    - Make targeted, minimal edits — do not refactor what's not broken
    - Add new components/pages for new features
 
-4. Create/update: `./output/FRONTEND_NOTES.md` documenting:
+4. Create/update: `/Users/anirvan/dev/Agents/output/<product-name>/FRONTEND_NOTES.md` documenting:
    - File structure
    - Key components and their purpose
    - Any API endpoints this frontend expects (for Backend Agent)
    - Any open questions or blockers
 
-Save all frontend code to `./app/frontend/`.
+Save all frontend code to `/Users/anirvan/dev/Agents/app/<product-name>/frontend/`.
 ```
 
 ---
@@ -102,7 +108,7 @@ PRD FROM PRODUCT MANAGER:
 {insert full PRD content}
 
 YOUR TASKS:
-1. Check if an architecture already exists by reading `./output/ARCHITECTURE.md` and any existing code in `./app/`. If it exists, document it and identify what needs to change.
+1. Check if an architecture already exists by reading `/Users/anirvan/dev/Agents/output/<product-name>/ARCHITECTURE.md` and any existing code in `/Users/anirvan/dev/Agents/app/<product-name>/`. If it exists, document it and identify what needs to change.
 
 2. Design (or update) the system architecture:
    - Define all services (web server, database, cache, queues, auth, storage, third-party APIs)
@@ -111,14 +117,14 @@ YOUR TASKS:
    - Document data flow between frontend, backend, and external services
    - Define environment variables needed
 
-3. Create/update: `./output/ARCHITECTURE.md` with:
+3. Create/update: `/Users/anirvan/dev/Agents/output/<product-name>/ARCHITECTURE.md` with:
    - System diagram (described in text/ASCII)
    - Service list with tech choices and rationale
    - Integration list with setup notes
    - Environment variable template (`.env.example` format)
    - Infrastructure setup steps (local dev + deployment target)
 
-Also save a `./app/.env.example` file.
+Also save a `/Users/anirvan/dev/Agents/app/<product-name>/.env.example` file.
 ```
 
 ---
@@ -134,7 +140,7 @@ PRD FROM PRODUCT MANAGER:
 {insert full PRD content}
 
 YOUR TASKS:
-1. Check if a backend codebase exists in `./app/backend/`. If yes, read it fully before making changes.
+1. Check if a backend codebase exists in `/Users/anirvan/dev/Agents/app/<product-name>/backend/`. If yes, read it fully before making changes.
 
 2. If building new:
    - Scaffold the backend using the stack from the PRD tech recommendations
@@ -148,13 +154,13 @@ YOUR TASKS:
    - Make targeted changes only — do not refactor unrelated code
    - Add new endpoints/models for new features
 
-4. Create/update: `./output/BACKEND_NOTES.md` documenting:
+4. Create/update: `/Users/anirvan/dev/Agents/output/<product-name>/BACKEND_NOTES.md` documenting:
    - API endpoint list (method, path, request/response shape)
    - Database schema
    - Auth flow (if applicable)
    - Any open questions or blockers
 
-Save all backend code to `./app/backend/`.
+Save all backend code to `/Users/anirvan/dev/Agents/app/<product-name>/backend/`.
 ```
 
 ---
@@ -167,11 +173,11 @@ After all three parallel agents complete, spawn a `general-purpose` agent with t
 You are a senior QA Engineer.
 
 YOUR CONTEXT:
-- PRD: (read `./output/PRD.md`)
-- Frontend notes: (read `./output/FRONTEND_NOTES.md`)
-- Architecture notes: (read `./output/ARCHITECTURE.md`)
-- Backend notes: (read `./output/BACKEND_NOTES.md`)
-- All application code: (read everything in `./app/`)
+- PRD: (read `/Users/anirvan/dev/Agents/output/<product-name>/PRD.md`)
+- Frontend notes: (read `/Users/anirvan/dev/Agents/output/<product-name>/FRONTEND_NOTES.md`)
+- Architecture notes: (read `/Users/anirvan/dev/Agents/output/<product-name>/ARCHITECTURE.md`)
+- Backend notes: (read `/Users/anirvan/dev/Agents/output/<product-name>/BACKEND_NOTES.md`)
+- All application code: (read everything in `/Users/anirvan/dev/Agents/app/<product-name>/`)
 
 YOUR TASKS:
 
@@ -190,7 +196,7 @@ For each test case in the plan:
 - Mark each as: PASS / FAIL / BLOCKED (code not yet implemented)
 
 PART 3 — GAP REPORT:
-Create `./output/QA_REPORT.md` with:
+Create `/Users/anirvan/dev/Agents/output/<product-name>/QA_REPORT.md` with:
 - Test results summary (X passed, Y failed, Z blocked)
 - For each FAIL: exact file and line, what's wrong, what the fix should be
 - For each BLOCKED: what's missing and which agent owns it (Frontend/Arch/Backend)
@@ -203,7 +209,7 @@ Return the QA report summary when done.
 ## STEP 4 — FEEDBACK LOOP (If QA finds gaps)
 
 If the QA report contains FAILs or BLOCKEDs:
-- Parse `./output/QA_REPORT.md`
+- Parse `/Users/anirvan/dev/Agents/output/<product-name>/QA_REPORT.md`
 - Group issues by owner: Frontend issues → re-run Frontend Agent with the issues; Backend issues → re-run Backend Agent; Architecture issues → re-run Architecture Agent
 - Each agent gets the original PRD + their notes + only their section of the QA report
 - After fixes, re-run the QA Agent for a final verification pass
@@ -219,8 +225,8 @@ You are a DevOps Engineer responsible for getting this app live.
 
 YOUR TASKS:
 
-1. Create a `netlify.toml` file in the project root (`./netlify.toml`) with correct build settings.
-   Read `./output/FRONTEND_NOTES.md` and `./output/ARCHITECTURE.md` to determine the framework.
+1. Create a `netlify.toml` file in the project root (`/Users/anirvan/dev/Agents/netlify.toml`) with correct build settings.
+   Read `/Users/anirvan/dev/Agents/output/<product-name>/FRONTEND_NOTES.md` and `/Users/anirvan/dev/Agents/output/<product-name>/ARCHITECTURE.md` to determine the framework.
 
    Example for a React/Vite app:
    [build]
@@ -260,7 +266,7 @@ YOUR TASKS:
    - [ ] Confirm repo is pushed to GitHub (check: gh repo view)
    - [ ] Go to app.netlify.com → Add project → Import from GitHub
    - [ ] Select the repo, set build settings from netlify.toml
-   - [ ] Add environment variables from `./app/.env.example` in Netlify UI (Site settings → Environment variables)
+   - [ ] Add environment variables from `/Users/anirvan/dev/Agents/app/<product-name>/.env.example` in Netlify UI (Site settings → Environment variables)
    - [ ] Click Deploy — live URL will appear in ~2 minutes
    - [ ] Future pushes to `main` will auto-deploy
 
@@ -274,7 +280,7 @@ Return the netlify.toml contents and confirm git push succeeded.
 When the pipeline is complete, summarize to the user:
 1. What was built (feature list from PRD)
 2. Tech stack used
-3. File structure of `./app/`
+3. File structure of `/Users/anirvan/dev/Agents/app/<product-name>/`
 4. Final QA results (pass rate)
 5. Any remaining open issues
 6. netlify.toml created — confirm settings
